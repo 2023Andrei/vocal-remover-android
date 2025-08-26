@@ -43,5 +43,5 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     // FFmpeg для удаления вокала
-    implementation 'com.arthenica:mobile-ffmpeg:4.5.1'
+    implementation 'com.arthenica:mobile-ffmpeg-audio:4.4.LTS'
 }
