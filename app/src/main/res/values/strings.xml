@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Vocal Remover</string>
+    <string name="select_audio">Выбрать аудио</string>
+    <string name="processing">Обработка...</string>
+    <string name="done">Готово! Сохранено в:</string>
+</resources>
