@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -35,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(intent, 100)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int,  Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
             val uri = data?.data
@@ -52,16 +51,18 @@ class MainActivity : AppCompatActivity() {
                 val sourcePath = getRealPathFromURI(uri) ?: throw Exception("Не удалось получить путь")
                 val outputPath = File(applicationContext.externalCacheDir, "instrumental.mp3").absolutePath
 
-                // Удаление вокала через FFmpeg (подавление центрального канала)
-                val cmd = "-i $sourcePath -af 'pan=stereo|c0=c0-c1|c1=c1-c0' -y $outputPath"
-                val rc = Runtime.getRuntime().exec("ffmpeg " + cmd.replace("'", "\'").replace(" ", "\ "))
+                // Команда для удаления вокала через ffmpeg (подавление центрального канала)
+                val cmd = "ffmpeg -i \"$sourcePath\" -af \"pan=stereo|c0=c0-c1|c1=c1-c0\" -y \"$outputPath\""
+
+                val proc = Runtime.getRuntime().exec(cmd)
+                val exitCode = proc.waitFor()
 
                 runOnUiThread {
                     progressBar.visibility = android.view.View.GONE
-                    if (rc == 0) {
+                    if (exitCode == 0) {
                         Toast.makeText(this, "✅ Готово! Сохранено: $outputPath", Toast.LENGTH_LONG).show()
                     } else {
-                        Toast.makeText(this, "❌ Ошибка FFmpeg: $rc", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "❌ Ошибка ffmpeg: $exitCode", Toast.LENGTH_LONG).show()
                     }
                     btnSelectAudio.isEnabled = true
                 }
