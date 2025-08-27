@@ -9,8 +9,6 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.arthenica.mobileffmpeg.Config
-import com.arthenica.mobileffmpeg.FFmpeg
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -56,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
                 // Удаление вокала через FFmpeg (подавление центрального канала)
                 val cmd = "-i $sourcePath -af 'pan=stereo|c0=c0-c1|c1=c1-c0' -y $outputPath"
-                val rc = FFmpeg.execute(cmd)
+                val rc = Runtime.getRuntime().exec("ffmpeg " + cmd.replace("'", "\'").replace(" ", "\ "))
 
                 runOnUiThread {
                     progressBar.visibility = android.view.View.GONE
