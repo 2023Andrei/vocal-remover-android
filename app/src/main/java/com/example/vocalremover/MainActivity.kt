@@ -51,10 +51,9 @@ class MainActivity : AppCompatActivity() {
                 val sourcePath = getRealPathFromURI(uri) ?: throw Exception("Не удалось получить путь")
                 val outputPath = File(applicationContext.externalCacheDir, "instrumental.mp3").absolutePath
 
-                // Команда для удаления вокала через ffmpeg (подавление центрального канала)
-                val cmd = "ffmpeg -i \"$sourcePath\" -af \"pan=stereo|c0=c0-c1|c1=c1-c0\" -y \"$outputPath\""
-
-                val proc = Runtime.getRuntime().exec(cmd)
+                // Команда для удаления вокала через ffmpeg
+                val cmd = "-i \"$sourcePath\" -af \"pan=stereo|c0=c0-c1|c1=c1-c0\" -y \"$outputPath\""
+                val proc = Runtime.getRuntime().exec("ffmpeg $cmd")
                 val exitCode = proc.waitFor()
 
                 runOnUiThread {
